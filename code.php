@@ -6,19 +6,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = mysqli_real_escape_string($con, $_POST["email"]);
     $phone = mysqli_real_escape_string($con, $_POST["phone"]);
     $pass = mysqli_real_escape_string($con, $_POST["pass"]);
-    $confirm = $_POST["confirm"];
+    $confirm = mysqli_real_escape_string($con, $_POST["confirm"]);
 
-   
+    // Check if passwords match
     if ($pass !== $confirm) {
         echo "Passwords do not match!";
         exit;
     }
 
-    $hashedPass = password_hash($pass, PASSWORD_DEFAULT);
-
-   
-    $query = "INSERT INTO info(username, email, phone, password)
-              VALUES('$un', '$email', '$phone', '$hashedPass')";
+    // Save as plain text (NOT RECOMMENDED for production)
+    $query = "INSERT INTO info (username, email, phone, password, confirm_password)
+              VALUES ('$un', '$email', '$phone', '$pass', '$confirm')";
 
     $run = mysqli_query($con, $query);
 
